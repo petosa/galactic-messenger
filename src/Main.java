@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
 import java.net.Socket;
@@ -26,22 +27,30 @@ public class Main extends Application {
     public static void main(String[] args){
         //launch(args);
 
-        Thread t = new Thread(new Host());
+        //Declare variables
+        final String SERVERNAME = "127.0.0.1";
+        final int PORT = 51012;
+        final int TIMEOUT = 1000;
+
+        //Start the listener thread
+        Thread t = new Thread(new Host(PORT));
         t.start();
 
-        Scanner in = new Scanner(System.in);
-        final String SERVERNAME = "127.0.0.1";
-        int PORT = 51012;
-        Socket client = null;
         try {
-            client = new Socket(SERVERNAME, PORT);
+            System.out.println("Searching for a host on " + SERVERNAME + ":" + PORT + "...");
+            Socket client = new Socket();
+            client.connect(new InetSocketAddress(SERVERNAME, PORT), TIMEOUT);
+            runClient(client, SERVERNAME, PORT);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Could not find a host.");
         }
-        System.out.println("Connecting to " + SERVERNAME +
-                " on port " + PORT);
-        System.out.println("Just connected to "
-                + client.getRemoteSocketAddress());
+
+    }
+
+    public static void runClient(Socket client, String server, int port) {
+        final Scanner in = new Scanner(System.in);
+
+        System.out.println("Found a host at " + server + ":" + port + ".");
         while(true) {
             OutputStream outToServer = null;
             try {
