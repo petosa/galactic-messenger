@@ -28,9 +28,9 @@ public class Main extends Application {
         //launch(args);
 
         //Declare variables
-        final String SERVERNAME = "127.0.0.1";
+        final String SERVERNAME = "107.13.142.28";
         final int PORT = 51012;
-        final int TIMEOUT = 1000;
+        final int TIMEOUT = 10000;
 
         //Start the listener thread
         Thread t = new Thread(new Host(PORT));
