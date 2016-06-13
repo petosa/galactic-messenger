@@ -1,12 +1,24 @@
 package galactic;
 
+import galactic.net.IncomingMessageProducer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 public class Main extends Application {
+
+    private static int globalPort = 51012;
+    private static BlockingQueue<String> messageQueue = new ArrayBlockingQueue<>(10000);
+    private static Scanner sc = new Scanner(System.in);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -22,5 +34,25 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        //launch(args);
+        IncomingMessageProducer imp = new IncomingMessageProducer(messageQueue, globalPort);
+        imp.start();
+
+        Socket client = null;
+        try {
+            client = new Socket("localhost", globalPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        while (true) {
+            try {
+                DataOutputStream out = new DataOutputStream(client.getOutputStream());
+                out.writeUTF(sc.nextLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
