@@ -1,6 +1,6 @@
 package galactic;
 
-import galactic.net.IncomingMessageProducer;
+import galactic.net.ConnectionManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -36,12 +36,12 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         //launch(args);
-        IncomingMessageProducer imp = new IncomingMessageProducer(messageQueue, globalPort);
-        imp.start();
+        ConnectionManager cm = new ConnectionManager(messageQueue, globalPort);
+        cm.start();
 
         Socket client = null;
         try {
-            client = new Socket("localhost", globalPort);
+            client = new Socket("127.0.0.1", globalPort);
         } catch (IOException e) {
             e.printStackTrace();
         }

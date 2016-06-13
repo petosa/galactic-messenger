@@ -2,7 +2,6 @@ package galactic.net;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,25 +14,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * perform that requisite action.
  */
 
-public class IncomingMessageProducer extends Thread {
+public class ConnectionProducer extends Thread {
 
     private AtomicBoolean toggle;
     private BlockingQueue<String> streamQueue;
-    private ServerSocket serverSocket;
-    private Socket implicitServerClient;
+    private Socket connection;
     private DataInputStream inputStream;
 
-    public IncomingMessageProducer(BlockingQueue<String> streamQueue, int port) {
+    public ConnectionProducer(BlockingQueue<String> streamQueue, Socket connection) {
         super();
         this.streamQueue = streamQueue;
         toggle = new AtomicBoolean(true);
         this.setDaemon(true);
-
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.connection = connection;
     }
 
     public void terminate() { toggle.set(false); }
@@ -41,8 +34,7 @@ public class IncomingMessageProducer extends Thread {
     @Override
     public void run() {
         try {
-            implicitServerClient = serverSocket.accept();
-            inputStream = new DataInputStream(implicitServerClient.getInputStream());
+            inputStream = new DataInputStream(connection.getInputStream());
 
             while (toggle.get()) {
                 streamQueue.put(inputStream.readUTF());
