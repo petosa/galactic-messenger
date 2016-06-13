@@ -38,7 +38,7 @@ public class ConnectionProducer extends Thread {
 
             while (toggle.get()) {
                 streamQueue.put(inputStream.readUTF());
-                System.out.println("Successfully added something to our StreamQueue");
+                System.out.println("Successfully added something to the StreamQueue");
             }
         } catch (IOException e) {
             e.printStackTrace();

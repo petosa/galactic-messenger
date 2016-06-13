@@ -29,6 +29,8 @@ public class ConnectionManager extends Thread {
 
         try {
             this.serverSocket = new ServerSocket(port);
+            this.serverSocket.setSoTimeout(10000);
+            System.out.println("ConnectionManager now running on " + serverSocket.getLocalPort());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,6 +50,8 @@ public class ConnectionManager extends Thread {
             ConnectionProducer c = new ConnectionProducer(streamQueue, socket);
             threadPool.add(c);
             c.start();
+
+            System.out.println("Successfully added client " + socket.getRemoteSocketAddress());
         }
     }
 }

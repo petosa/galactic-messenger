@@ -22,20 +22,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("view/mainWindow.fxml"));
-
-        primaryStage.setMaxWidth(900);
-        primaryStage.setMaxHeight(600);
-        primaryStage.setMinWidth(450);
-        primaryStage.setMinHeight(300);
-
-        primaryStage.setTitle("Galactic Messenger");
-        primaryStage.setScene(new Scene(root, 900, 600));
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        //launch(args);
         ConnectionManager cm = new ConnectionManager(messageQueue, globalPort);
         cm.start();
 
@@ -46,6 +32,17 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
+        Parent root = FXMLLoader.load(getClass().getResource("view/mainWindow.fxml"));
+
+        primaryStage.setMaxWidth(900);
+        primaryStage.setMaxHeight(600);
+        primaryStage.setMinWidth(450);
+        primaryStage.setMinHeight(300);
+
+        primaryStage.setTitle("Galactic Messenger");
+        primaryStage.setScene(new Scene(root, 900, 600));
+        primaryStage.show();
+
         while (true) {
             try {
                 DataOutputStream out = new DataOutputStream(client.getOutputStream());
@@ -55,4 +52,6 @@ public class Main extends Application {
             }
         }
     }
+
+    public static void main(String[] args) { launch(args); }
 }
