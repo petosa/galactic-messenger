@@ -29,6 +29,7 @@ public class ConnectionProducer extends Thread {
         toggle = new AtomicBoolean(true);
         this.setDaemon(true);
         this.connection = connection;
+        exceptioned = new AtomicBoolean();
     }
 
     public void terminate() { toggle.set(false); }

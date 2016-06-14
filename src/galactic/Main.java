@@ -30,7 +30,7 @@ public class Main extends Application {
         cm.start();
         cc.start();
 
-        String[] ips = {"68.132.38.122", "107.13.142.28"};
+        String[] ips = {"theunixphilosophy.com", "107.13.142.28"};
         List<Socket> clients = new ArrayList<>();
         try {
             for(String ip : ips) {
