@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -28,9 +30,12 @@ public class Main extends Application {
         cm.start();
         cc.start();
 
-        Socket client = null;
+        String[] ips = {"theunixphilosophy.com", "68.132.38.122"};
+        List<Socket> clients = new ArrayList<>();
         try {
-            client = new Socket("theunixphilosophy.com", globalPort);
+            for(String ip : ips) {
+                clients.add(new Socket(ip, globalPort));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,8 +53,11 @@ public class Main extends Application {
 
         while (true) {
             try {
-                DataOutputStream out = new DataOutputStream(client.getOutputStream());
-                out.writeUTF(sc.nextLine());
+                String toSend = sc.nextLine();
+                for(Socket s : clients) {
+                    DataOutputStream out = new DataOutputStream(s.getOutputStream());
+                    out.writeUTF(toSend);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
