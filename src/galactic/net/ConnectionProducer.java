@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ConnectionProducer extends Thread {
 
     private AtomicBoolean toggle;
+    private AtomicBoolean exceptioned;
     private BlockingQueue<String> streamQueue;
     private Socket connection;
     private DataInputStream inputStream;
@@ -32,6 +33,8 @@ public class ConnectionProducer extends Thread {
 
     public void terminate() { toggle.set(false); }
 
+    public void setSocket(Socket connection) { this.connection = connection; }
+
     @Override
     public void run() {
         try {
@@ -39,9 +42,13 @@ public class ConnectionProducer extends Thread {
 
             while (toggle.get()) {
                 streamQueue.put(inputStream.readUTF());
+
+                if (exceptioned.get()) {
+                    System.out.println("Still chugging along");
+                }
             }
         } catch (SocketException e) {
-
+            this.exceptioned.set(true);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
