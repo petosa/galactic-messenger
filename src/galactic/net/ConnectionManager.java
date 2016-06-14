@@ -18,7 +18,7 @@ public class ConnectionManager extends Thread {
     private BlockingQueue<String> streamQueue;
     private ServerSocket serverSocket;
     private Socket socket;
-    private List<Thread> threadPool;
+    private List<ConnectionProducer> threadPool;
 
     public ConnectionManager(BlockingQueue<String> streamQueue, int port) {
         super();
@@ -29,7 +29,6 @@ public class ConnectionManager extends Thread {
 
         try {
             this.serverSocket = new ServerSocket(port);
-            this.serverSocket.setSoTimeout(10000);
             System.out.println("ConnectionManager now running on " + serverSocket.getLocalPort());
         } catch (IOException e) {
             e.printStackTrace();

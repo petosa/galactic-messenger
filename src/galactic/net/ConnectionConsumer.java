@@ -20,9 +20,10 @@ public class ConnectionConsumer extends Thread {
     @Override
     public void run() {
         while (toggle.get()) {
-            String s = null;
-            if ((s = streamQueue.poll()) != null) {
-                
+            try {
+                String s = streamQueue.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

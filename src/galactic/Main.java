@@ -16,7 +16,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class Main extends Application {
 
-    private static int globalPort = 51012;
+    private final int globalPort = 51012;
     private static BlockingQueue<String> messageQueue = new ArrayBlockingQueue<>(10000);
     private static Scanner sc = new Scanner(System.in);
 
