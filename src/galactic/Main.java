@@ -1,5 +1,6 @@
 package galactic;
 
+import galactic.net.ConnectionConsumer;
 import galactic.net.ConnectionManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,11 +24,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         ConnectionManager cm = new ConnectionManager(messageQueue, globalPort);
+        ConnectionConsumer cc = new ConnectionConsumer(messageQueue);
         cm.start();
+        cc.start();
 
         Socket client = null;
         try {
-            client = new Socket("127.0.0.1", globalPort);
+            client = new Socket("theunixphilosophy.com", globalPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,7 +44,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("Galactic Messenger");
         primaryStage.setScene(new Scene(root, 900, 600));
-        primaryStage.show();
+        //primaryStage.show();
 
         while (true) {
             try {

@@ -13,6 +13,7 @@ public class ConnectionConsumer extends Thread {
 
     public ConnectionConsumer(BlockingQueue<String> streamQueue) {
         this.streamQueue = streamQueue;
+        toggle = new AtomicBoolean(true);
     }
 
     public void terminate() { toggle.set(false); }
@@ -22,6 +23,7 @@ public class ConnectionConsumer extends Thread {
         while (toggle.get()) {
             try {
                 String s = streamQueue.take();
+                System.out.println(s);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
