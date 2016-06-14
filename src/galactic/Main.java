@@ -30,7 +30,7 @@ public class Main extends Application {
         cm.start();
         cc.start();
 
-        String[] ips = {"theunixphilosophy.com", "68.132.38.122"};
+        String[] ips = {"theunixphilosophy.com", "107.13.142.28"};
         List<Socket> clients = new ArrayList<>();
         try {
             for(String ip : ips) {
@@ -54,9 +54,9 @@ public class Main extends Application {
         while (true) {
             try {
                 String toSend = sc.nextLine();
-                for(Socket s : clients) {
+                for (Socket s : clients) {
                     DataOutputStream out = new DataOutputStream(s.getOutputStream());
-                    out.writeUTF("[" + Math.random() + "] " + toSend);
+                    out.writeUTF("[Wey] " + toSend);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

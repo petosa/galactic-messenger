@@ -47,6 +47,9 @@ public class ConnectionManager extends Thread {
             }
 
             ConnectionProducer c = new ConnectionProducer(streamQueue, socket);
+            if (threadPool.contains(c)) {
+                threadPool.remove(c);
+            }
             threadPool.add(c);
             c.start();
 
