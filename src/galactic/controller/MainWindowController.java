@@ -15,7 +15,7 @@ public class MainWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         assert connectButton != null : "id=\"connectButton\" was not injected: check your FXML file 'mainWindow.fxml'.";
 
-        /*ConnectionProducer csh = new ConnectionProducer();
+        /*InboundProducer csh = new InboundProducer();
 
         connectButton.setOnMouseClicked(event -> csh.terminate());
 

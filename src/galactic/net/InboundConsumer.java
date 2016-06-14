@@ -7,12 +7,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  */
 
-public class ConnectionConsumer extends Thread {
+public class InboundConsumer extends Thread {
     private AtomicBoolean toggle;
-    private BlockingQueue<String> streamQueue;
+    private BlockingQueue<String> inboundQueue;
 
-    public ConnectionConsumer(BlockingQueue<String> streamQueue) {
-        this.streamQueue = streamQueue;
+    public InboundConsumer(BlockingQueue<String> inboundQueue) {
+        this.inboundQueue = inboundQueue;
+        this.setDaemon(true);
         toggle = new AtomicBoolean(true);
     }
 
@@ -22,7 +23,7 @@ public class ConnectionConsumer extends Thread {
     public void run() {
         while (toggle.get()) {
             try {
-                String s = streamQueue.take();
+                String s = inboundQueue.take();
                 System.out.println(s);
             } catch (InterruptedException e) {
                 e.printStackTrace();

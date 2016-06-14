@@ -1,46 +1,48 @@
 package galactic;
 
-import galactic.net.ConnectionConsumer;
-import galactic.net.ConnectionManager;
+import galactic.model.Session;
+import galactic.model.TextMessage;
+import galactic.net.InboundConsumer;
+import galactic.net.InboundManager;
+import galactic.net.OutboundManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class Main extends Application {
 
-    private final int globalPort = 51012;
-    private static BlockingQueue<String> messageQueue = new ArrayBlockingQueue<>(10000);
+    public static final int GLOBAL_PORT = 51012;
+    private static BlockingQueue<String> inboundQueue = new ArrayBlockingQueue<>(10000);
+    private static BlockingQueue<TextMessage> outboundQueue = new ArrayBlockingQueue<>(10000);
     private static Scanner sc = new Scanner(System.in);
+    private String handle;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ConnectionManager cm = new ConnectionManager(messageQueue, globalPort);
-        ConnectionConsumer cc = new ConnectionConsumer(messageQueue);
+        System.out.println("Type the handle you'd like to be referred to by:");
+        handle = sc.nextLine();
+
+        OutboundManager om = new OutboundManager(outboundQueue);
+        InboundManager cm = new InboundManager(inboundQueue, GLOBAL_PORT, om);
+        InboundConsumer cc = new InboundConsumer(inboundQueue);
+        om.start();
         cm.start();
         cc.start();
 
-        String[] ips = {"theunixphilosophy.com", "107.13.142.28"};
-        List<Socket> clients = new ArrayList<>();
-        try {
-            for(String ip : ips) {
-                clients.add(new Socket(ip, globalPort));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        System.out.println("Type the IPs you want to connect to, separated by commas:");
+        String[] ips = sc.nextLine().split(",");
+        for (int i = 0; i < ips.length; i++) {
+            ips[i] = ips[i].trim();
         }
 
-        Parent root = FXMLLoader.load(getClass().getResource("view/mainWindow.fxml"));
+        Session s = new Session(Arrays.asList(ips));
+        System.out.println("Start sending messages to begin:");
+
+        /*Parent root = FXMLLoader.load(getClass().getResource("view/mainWindow.fxml"));
 
         primaryStage.setMaxWidth(900);
         primaryStage.setMaxHeight(600);
@@ -49,19 +51,11 @@ public class Main extends Application {
 
         primaryStage.setTitle("Galactic Messenger");
         primaryStage.setScene(new Scene(root, 900, 600));
-        //primaryStage.show();
+        primaryStage.show();*/
 
         while (true) {
-            try {
-                String toSend = sc.nextLine();
-                for (Socket s : clients) {
-                    DataOutputStream out = new DataOutputStream(s.getOutputStream());
-                    out.writeUTF("[Wey] " + toSend);
-                    out.writeUTF(toSend);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String messageContents = sc.nextLine();
+            outboundQueue.put(new TextMessage(handle, messageContents, s));
         }
     }
 
