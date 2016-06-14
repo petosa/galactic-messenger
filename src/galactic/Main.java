@@ -30,7 +30,7 @@ public class Main extends Application {
 
         Socket client = null;
         try {
-            client = new Socket("theunixphilosophy.com", globalPort);
+            client = new Socket("theunixphilosophy.com", globalPort); //Connecting to Will
         } catch (IOException e) {
             e.printStackTrace();
         }
