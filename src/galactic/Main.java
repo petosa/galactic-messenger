@@ -56,11 +56,8 @@ public class Main extends Application {
                 String toSend = sc.nextLine();
                 for (Socket s : clients) {
                     DataOutputStream out = new DataOutputStream(s.getOutputStream());
-<<<<<<< HEAD
                     out.writeUTF("[Wey] " + toSend);
-=======
                     out.writeUTF(toSend);
->>>>>>> parent of 3d10dc1... multiuser
                 }
             } catch (IOException e) {
                 e.printStackTrace();

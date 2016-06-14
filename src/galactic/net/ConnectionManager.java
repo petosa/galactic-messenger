@@ -47,12 +47,8 @@ public class ConnectionManager extends Thread {
             }
 
             ConnectionProducer c = new ConnectionProducer(streamQueue, socket);
-            if (threadPool.contains(c)) {
-                threadPool.get(threadPool.indexOf(c)).setSocket(socket);
-            } else {
-                threadPool.add(c);
-                c.start();
-            }
+            threadPool.add(c);
+            c.start();
 
             System.out.println("Successfully added client " + socket.getRemoteSocketAddress());
         }
