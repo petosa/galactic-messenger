@@ -48,20 +48,4 @@ public class ConnectionProducer extends Thread {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ConnectionProducer that = (ConnectionProducer) o;
-
-        return connection != null ? connection.getInetAddress().getHostAddress().equals(that.connection.getInetAddress().getHostAddress()) : that.connection == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return connection != null ? connection.hashCode() : 0;
-    }
 }
