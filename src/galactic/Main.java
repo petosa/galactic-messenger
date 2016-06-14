@@ -56,7 +56,7 @@ public class Main extends Application {
                 String toSend = sc.nextLine();
                 for(Socket s : clients) {
                     DataOutputStream out = new DataOutputStream(s.getOutputStream());
-                    out.writeUTF(toSend);
+                    out.writeUTF("[" + Math.random() + "] " + toSend);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
