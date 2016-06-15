@@ -8,6 +8,7 @@ import galactic.net.OutboundManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -36,7 +37,7 @@ public class Main extends Application {
         System.out.println("Type the IPs you want to connect to, separated by commas:");
         String[] ips = sc.nextLine().split(",");
         for (int i = 0; i < ips.length; i++) {
-            ips[i] = ips[i].trim();
+            ips[i] = InetAddress.getByName(ips[i].trim()).getHostAddress();
         }
 
         Session s = new Session(Arrays.asList(ips));
