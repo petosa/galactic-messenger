@@ -5,8 +5,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The reason we want to use a producer/consumer solution is so that the port can
@@ -17,23 +15,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 public class InboundProducer extends Thread {
-
-    private AtomicBoolean toggle;
-    private BlockingQueue<String> inboundQueue;
     private Socket connection;
     private DataInputStream inputStream;
-    private OutboundManager outboundManager;
+    private NetworkService networkService;
 
-    public InboundProducer(BlockingQueue<String> inboundQueue, Socket connection, OutboundManager outboundManager) {
+    public InboundProducer(NetworkService networkService, Socket connection) {
         super();
-        this.inboundQueue = inboundQueue;
-        toggle = new AtomicBoolean(true);
         this.setDaemon(true);
         this.connection = connection;
-        this.outboundManager = outboundManager;
+        this.networkService = networkService;
     }
-
-    public void terminate() { toggle.set(false); }
 
     public Socket getSocket() { return connection; }
     public void setSocket(Socket connection) { this.connection = connection; }
@@ -43,16 +34,16 @@ public class InboundProducer extends Thread {
         try {
             inputStream = new DataInputStream(connection.getInputStream());
 
-            while (toggle.get()) {
-                inboundQueue.put(inputStream.readUTF());
+            while (true) {
+                networkService.getInboundQueue().put(inputStream.readUTF());
             }
         } catch (EOFException e) {
             String remoteAddress = connection.getInetAddress().getHostAddress();
-            outboundManager.getConnectionStatuses().put(remoteAddress, false);
+            networkService.getConnectionStatuses().put(remoteAddress, false);
             System.out.println(remoteAddress + " has disconnected.");
         } catch (SocketException e) {
             String remoteAddress = connection.getInetAddress().getHostAddress();
-            outboundManager.getConnectionStatuses().put(remoteAddress, false);
+            networkService.getConnectionStatuses().put(remoteAddress, false);
             System.out.println(remoteAddress + " has disconnected.");
         } catch (IOException e) {
             e.printStackTrace();

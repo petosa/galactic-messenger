@@ -2,23 +2,15 @@ package galactic;
 
 import galactic.model.Session;
 import galactic.model.TextMessage;
-import galactic.net.InboundConsumer;
-import galactic.net.InboundManager;
-import galactic.net.OutboundManager;
+import galactic.net.NetworkService;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 public class Main extends Application {
-
-    public static final int GLOBAL_PORT = 51012;
-    private static BlockingQueue<String> inboundQueue = new ArrayBlockingQueue<>(10000);
-    private static BlockingQueue<TextMessage> outboundQueue = new ArrayBlockingQueue<>(10000);
     private static Scanner sc = new Scanner(System.in);
     private String handle;
 
@@ -27,12 +19,7 @@ public class Main extends Application {
         System.out.println("Type the handle you'd like to be referred to by:");
         handle = sc.nextLine();
 
-        OutboundManager om = new OutboundManager(outboundQueue);
-        InboundManager cm = new InboundManager(inboundQueue, GLOBAL_PORT, om);
-        InboundConsumer cc = new InboundConsumer(inboundQueue);
-        om.start();
-        cm.start();
-        cc.start();
+        NetworkService networkService = new NetworkService();
 
         System.out.println("Type the IPs you want to connect to, separated by commas:");
         String[] ips = sc.nextLine().split(",");
@@ -56,10 +43,9 @@ public class Main extends Application {
 
         while (true) {
             String messageContents = sc.nextLine();
-            outboundQueue.put(new TextMessage(handle, messageContents, s));
+            networkService.getOutboundQueue().put(new TextMessage(handle, messageContents, s));
         }
     }
 
     public static void main(String[] args) { launch(args); }
-
 }

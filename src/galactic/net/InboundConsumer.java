@@ -1,29 +1,23 @@
 package galactic.net;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  *
  */
 
 public class InboundConsumer extends Thread {
-    private AtomicBoolean toggle;
-    private BlockingQueue<String> inboundQueue;
+    private NetworkService networkService;
 
-    public InboundConsumer(BlockingQueue<String> inboundQueue) {
-        this.inboundQueue = inboundQueue;
+    public InboundConsumer(NetworkService networkService) {
+        super();
         this.setDaemon(true);
-        toggle = new AtomicBoolean(true);
+        this.networkService = networkService;
     }
-
-    public void terminate() { toggle.set(false); }
 
     @Override
     public void run() {
-        while (toggle.get()) {
+        while (true) {
             try {
-                String s = inboundQueue.take();
+                String s = networkService.getInboundQueue().take();
                 System.out.println(s);
             } catch (InterruptedException e) {
                 e.printStackTrace();
