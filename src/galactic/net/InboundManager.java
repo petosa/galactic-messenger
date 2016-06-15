@@ -1,7 +1,5 @@
 package galactic.net;
 
-import galactic.Main;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -40,25 +38,21 @@ public class InboundManager extends Thread {
             }
 
             String remoteAddress = socket.getInetAddress().getHostAddress();
-            System.out.println(remoteAddress + " is asking to join...");
+            System.out.println(remoteAddress + " is attempting to join...");
             InboundProducer c = new InboundProducer(networkService, socket);
 
-            if (!networkService.getConnectionStatuses().containsKey(remoteAddress)) {
-                try {
+            try {
+                if (!networkService.getConnectionStatuses().containsKey(remoteAddress)) {
                     networkService.getOutboundConnections().put(remoteAddress, new Socket(remoteAddress, networkService.getPort()));
                     networkService.getConnectionStatuses().put(remoteAddress, true);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                if (!networkService.getConnectionStatuses().get(remoteAddress)) {
-                    try {
+                } else {
+                    if (!networkService.getConnectionStatuses().get(remoteAddress)) {
                         networkService.getOutboundConnections().put(remoteAddress, new Socket(remoteAddress, networkService.getPort()));
                         networkService.getConnectionStatuses().put(remoteAddress, true);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             if (networkService.getInboundConnections().containsKey(remoteAddress)) {

@@ -2,11 +2,13 @@ package galactic.model;
 
 import javafx.scene.control.ListCell;
 
+import java.io.Serializable;
+
 /**
  * The TextMessage will be used for standard messages as sent by chat participants; i.e. users
  */
 
-public class TextMessage implements ChatMessage {
+public class TextMessage implements ChatMessage, Serializable {
     private String handle;
     private String messageContents;
     private Session session;
@@ -30,7 +32,5 @@ public class TextMessage implements ChatMessage {
     public ListCell<ChatMessage> getListCell() { return null; }
 
     @Override
-    public String toString() {
-        return handle + ": " + messageContents;
-    }
+    public String toString() { return handle + ": " + messageContents; }
 }

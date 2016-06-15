@@ -1,8 +1,10 @@
 package galactic.net;
 
-import java.io.DataInputStream;
+import galactic.model.TextMessage;
+
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -16,7 +18,7 @@ import java.net.SocketException;
 
 public class InboundProducer extends Thread {
     private Socket connection;
-    private DataInputStream inputStream;
+    private ObjectInputStream inputStream;
     private NetworkService networkService;
 
     public InboundProducer(NetworkService networkService, Socket connection) {
@@ -31,23 +33,17 @@ public class InboundProducer extends Thread {
 
     @Override
     public void run() {
-        try {
-            inputStream = new DataInputStream(connection.getInputStream());
+        String remoteAddress = connection.getInetAddress().getHostAddress();
 
+        try {
             while (true) {
-                networkService.getInboundQueue().put(inputStream.readUTF());
+                inputStream = new ObjectInputStream(connection.getInputStream());
+                networkService.getInboundQueue().put((TextMessage) inputStream.readObject());
             }
-        } catch (EOFException e) {
-            String remoteAddress = connection.getInetAddress().getHostAddress();
+        } catch (EOFException | SocketException e) {
             networkService.getConnectionStatuses().put(remoteAddress, false);
             System.out.println(remoteAddress + " has disconnected.");
-        } catch (SocketException e) {
-            String remoteAddress = connection.getInetAddress().getHostAddress();
-            networkService.getConnectionStatuses().put(remoteAddress, false);
-            System.out.println(remoteAddress + " has disconnected.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

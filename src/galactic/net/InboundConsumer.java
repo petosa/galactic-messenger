@@ -1,5 +1,7 @@
 package galactic.net;
 
+import galactic.model.TextMessage;
+
 /**
  *
  */
@@ -17,8 +19,8 @@ public class InboundConsumer extends Thread {
     public void run() {
         while (true) {
             try {
-                String s = networkService.getInboundQueue().take();
-                System.out.println(s);
+                TextMessage tm = networkService.getInboundQueue().take();
+                System.out.println(tm);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

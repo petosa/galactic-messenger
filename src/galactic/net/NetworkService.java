@@ -16,15 +16,15 @@ public class NetworkService {
 
     // Global resources
     private int port;
+    private Map<String, Boolean> connectionStatuses;
 
     // Inbound resources
-    private BlockingQueue<String> inboundQueue;
+    private BlockingQueue<TextMessage> inboundQueue;
     private Map<String, InboundProducer> inboundConnections;
 
     // Outbound resources
     private BlockingQueue<TextMessage> outboundQueue;
     private Map<String, Socket> outboundConnections;
-    private Map<String, Boolean> connectionStatuses;
 
     // ThreadServices
     private InboundManager inboundManager;
@@ -36,6 +36,7 @@ public class NetworkService {
     public NetworkService() {
         // Global sets
         this.port = 51012;
+        connectionStatuses = Collections.synchronizedMap(new HashMap<>());
 
         // Inbound sets
         inboundQueue = new ArrayBlockingQueue<>(10000);
@@ -44,7 +45,6 @@ public class NetworkService {
         // Outbound sets
         outboundQueue = new ArrayBlockingQueue<>(10000);
         outboundConnections = Collections.synchronizedMap(new HashMap<>());
-        connectionStatuses = Collections.synchronizedMap(new HashMap<>());
 
         inboundManager = new InboundManager(this);
         outboundManager = new OutboundManager(this);
@@ -58,8 +58,8 @@ public class NetworkService {
     public int getPort() { return port; }
     public void setPort(int port) { this.port = port; }
 
-    public BlockingQueue<String> getInboundQueue() { return inboundQueue; }
-    public void setInboundQueue(BlockingQueue<String> inboundQueue) { this.inboundQueue = inboundQueue; }
+    public BlockingQueue<TextMessage> getInboundQueue() { return inboundQueue; }
+    public void setInboundQueue(BlockingQueue<TextMessage> inboundQueue) { this.inboundQueue = inboundQueue; }
 
     public Map<String, InboundProducer> getInboundConnections() { return inboundConnections; }
     public void setInboundConnections(Map<String, InboundProducer> inboundConnections) { this.inboundConnections = inboundConnections; }

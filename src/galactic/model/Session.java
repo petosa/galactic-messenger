@@ -3,9 +3,10 @@ package galactic.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Session {
+public class Session implements Serializable {
     private String sessionIdentifier;
     private List<String> destinationIPs;
     private List<ChatMessage> messageList;
