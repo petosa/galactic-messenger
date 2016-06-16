@@ -19,6 +19,7 @@ public class Main extends Application {
         System.out.println("Type the handle you'd like to be referred to by:");
         handle = sc.nextLine();
 
+        // We begin the NetworkService which handles all requisite networking behind the scenes
         NetworkService networkService = new NetworkService();
 
         System.out.println("Type the IPs you want to connect to, separated by commas:");
@@ -27,6 +28,7 @@ public class Main extends Application {
             ips[i] = InetAddress.getByName(ips[i].trim()).getHostAddress();
         }
 
+        // Pass in the list of IPs to our Session constructor
         Session s = new Session(Arrays.asList(ips));
         System.out.println("Start sending messages to begin:");
 
@@ -41,6 +43,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 900, 600));
         primaryStage.show();*/
 
+        // Adds messages as entered through Scanner in the console to the OutboundQueue
         while (true) {
             String messageContents = sc.nextLine();
             networkService.getOutboundQueue().put(new TextMessage(handle, messageContents, s));

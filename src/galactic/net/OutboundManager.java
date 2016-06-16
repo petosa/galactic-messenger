@@ -25,17 +25,22 @@ public class OutboundManager extends Thread {
     public void run() {
         while (true) {
             try {
+                // Pop a TextMessage from our outbound message queue
                 TextMessage cm = networkService.getOutboundQueue().take();
+
+                // Attempt to establish connections to each of its destination IP addresses
                 for (String ip : cm.getSession().getDestinationIPs()) {
                     try {
                         Socket connection = null;
+
+                        // Check if the connection to an IP already exists and act on it
                         if (!networkService.getOutboundConnections().containsKey(ip)) {
                             connection = new Socket(ip, networkService.getPort());
                         } else {
                             connection = networkService.getOutboundConnections().get(ip);
                         }
 
-                        // Immediately check if a connection has been made and act on it
+                        // Immediately check if a connection is live and act on it
                         if (connection.isConnected()) {
                             networkService.getOutboundConnections().put(ip, connection);
                             networkService.getConnectionStatuses().put(ip, true);

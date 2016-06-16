@@ -19,6 +19,7 @@ public class InboundConsumer extends Thread {
     public void run() {
         while (true) {
             try {
+                // Pretty simple here, take TextMessages from our InboundQueue and print them
                 TextMessage tm = networkService.getInboundQueue().take();
                 System.out.println(tm);
             } catch (InterruptedException e) {

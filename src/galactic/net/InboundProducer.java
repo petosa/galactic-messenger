@@ -33,14 +33,18 @@ public class InboundProducer extends Thread {
 
     @Override
     public void run() {
+        // Get the remote address of this thread's responsible connection
         String remoteAddress = connection.getInetAddress().getHostAddress();
 
+        // Attempt to read in a serialized Object from this thread's Socket through
+        // an ObjectInputStream and then put it into the NetworkService's inbound message queue
         try {
             while (true) {
                 inputStream = new ObjectInputStream(connection.getInputStream());
                 networkService.getInboundQueue().put((TextMessage) inputStream.readObject());
             }
         } catch (EOFException | SocketException e) {
+            // This exception occurs when the stream or socket suddenly closes
             networkService.getConnectionStatuses().put(remoteAddress, false);
             System.out.println(remoteAddress + " has disconnected.");
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
