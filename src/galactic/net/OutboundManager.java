@@ -2,6 +2,7 @@ package galactic.net;
 
 import galactic.model.TextMessage;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -35,7 +36,7 @@ public class OutboundManager extends Thread {
 
                         // Check if the connection to an IP already exists and act on it
                         if (!networkService.getOutboundConnections().containsKey(ip)) {
-                            connection = new Socket(ip, networkService.getPort());
+                            connection = SSLSocketFactory.getDefault().createSocket(ip, networkService.getPort());
                         } else {
                             connection = networkService.getOutboundConnections().get(ip);
                         }

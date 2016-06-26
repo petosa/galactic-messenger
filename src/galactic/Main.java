@@ -6,16 +6,37 @@ import galactic.net.NetworkService;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.InetAddress;
+import java.security.KeyStore;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main extends Application {
     private static Scanner sc = new Scanner(System.in);
     private String handle;
+    private String password;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        File f = new File("galactic.keystore");
+        if(f.exists() && !f.isDirectory()) {
+            System.out.println("Enter your password:");
+            password = sc.nextLine();
+        } else {
+            System.out.println("Welcome to galactic-messenger. Create a password below.");
+            password = sc.nextLine();
+            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+            ks.load(null, password.toCharArray());
+            FileOutputStream fos = new FileOutputStream("galactic.keystore");
+            ks.store(fos, password.toCharArray());
+            fos.close();
+        }
+        System.setProperty("javax.net.ssl.trustStore", "galactic.keystore");
+        System.setProperty("javax.net.ssl.keyStorePassword", password);
+
         System.out.println("Type the handle you'd like to be referred to by:");
         handle = sc.nextLine();
 
