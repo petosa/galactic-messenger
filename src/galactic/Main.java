@@ -21,6 +21,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        //Create private
         File f = new File("galactic.keystore");
         if(f.exists() && !f.isDirectory()) {
             System.out.println("Enter your password:");
@@ -28,20 +29,24 @@ public class Main extends Application {
         } else {
             System.out.println("Welcome to galactic-messenger. Create a password below.");
             password = sc.nextLine();
-            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-            ks.load(null, password.toCharArray());
-            FileOutputStream fos = new FileOutputStream("galactic.keystore");
-            ks.store(fos, password.toCharArray());
-            fos.close();
+
+            String[] cmd = {"-genkeypair", "-alias", "galactic", "-keyalg", "RSA", "-sigalg", "SHA256withRSA", "-dname", "CN=Java",
+                    "-storetype", "JKS", "-keypass", password, "-keystore", "galactic.keystore", "-storepass", password};
+            try{
+                sun.security.tools.keytool.Main.main(cmd);
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
+        System.setProperty("javax.net.ssl.keyStore", "galactic.keystore");
         System.setProperty("javax.net.ssl.trustStore", "galactic.keystore");
         System.setProperty("javax.net.ssl.keyStorePassword", password);
 
-        System.out.println("Type the handle you'd like to be referred to by:");
-        handle = sc.nextLine();
-
         // We begin the NetworkService which handles all requisite networking behind the scenes
         NetworkService networkService = new NetworkService();
+
+        System.out.println("Type the handle you'd like to be referred to by:");
+        handle = sc.nextLine();
 
         System.out.println("Type the IPs you want to connect to, separated by commas:");
         String[] ips = sc.nextLine().split(",");
