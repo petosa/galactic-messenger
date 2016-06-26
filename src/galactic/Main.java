@@ -41,6 +41,7 @@ public class Main extends Application {
         System.setProperty("javax.net.ssl.keyStore", "galactic.keystore");
         System.setProperty("javax.net.ssl.trustStore", "galactic.keystore");
         System.setProperty("javax.net.ssl.keyStorePassword", password);
+        System.setProperty("javax.net.ssl.trustStorePassword", password);
 
         // We begin the NetworkService which handles all requisite networking behind the scenes
         NetworkService networkService = new NetworkService();
