@@ -27,7 +27,7 @@ public class Main extends Application {
             System.out.println("Enter your password:");
             password = sc.nextLine();
         } else {
-            System.out.println("Welcome to galactic-messenger. Create a password below.");
+            /*System.out.println("Welcome to galactic-messenger. Create a password below.");
             password = sc.nextLine();
 
             String[] cmd = {"-genkeypair", "-alias", "galactic", "-keyalg", "RSA", "-sigalg", "SHA256withRSA", "-dname", "CN=Java",
@@ -36,12 +36,11 @@ public class Main extends Application {
                 sun.security.tools.keytool.Main.main(cmd);
             } catch (Exception ex){
                 ex.printStackTrace();
-            }
+            }*/
         }
         System.setProperty("javax.net.ssl.keyStore", "galactic.keystore");
         System.setProperty("javax.net.ssl.trustStore", "galactic.keystore");
         System.setProperty("javax.net.ssl.keyStorePassword", password);
-        System.setProperty("javax.net.ssl.trustStorePassword", password);
 
         // We begin the NetworkService which handles all requisite networking behind the scenes
         NetworkService networkService = new NetworkService();
