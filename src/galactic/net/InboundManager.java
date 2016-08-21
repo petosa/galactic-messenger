@@ -24,7 +24,7 @@ public class InboundManager extends Thread {
 
         // Start the ServerSocket that will listen for incoming connections
         try {
-            this.serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(networkService.getPort());
+            this.serverSocket = new ServerSocket(networkService.getPort());
             System.out.println("Starting InboundManager on port " + serverSocket.getLocalPort() + "...");
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,11 +53,11 @@ public class InboundManager extends Thread {
             // attempts to create a matching OutboundConnection for the Inbound one
             try {
                 if (!networkService.getConnectionStatuses().containsKey(remoteAddress)) {
-                    networkService.getOutboundConnections().put(remoteAddress, SSLSocketFactory.getDefault().createSocket(remoteAddress, networkService.getPort()));
+                    networkService.getOutboundConnections().put(remoteAddress, new Socket(remoteAddress, networkService.getPort()));
                     networkService.getConnectionStatuses().put(remoteAddress, true);
                 } else {
                     if (!networkService.getConnectionStatuses().get(remoteAddress)) {
-                        networkService.getOutboundConnections().put(remoteAddress, SSLSocketFactory.getDefault().createSocket(remoteAddress, networkService.getPort()));
+                        networkService.getOutboundConnections().put(remoteAddress, new Socket(remoteAddress, networkService.getPort()));
                         networkService.getConnectionStatuses().put(remoteAddress, true);
                     }
                 }

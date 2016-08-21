@@ -36,7 +36,7 @@ public class OutboundManager extends Thread {
 
                         // Check if the connection to an IP already exists and act on it
                         if (!networkService.getOutboundConnections().containsKey(ip)) {
-                            connection = SSLSocketFactory.getDefault().createSocket(ip, networkService.getPort());
+                            connection = new Socket(ip, networkService.getPort());
                         } else {
                             connection = networkService.getOutboundConnections().get(ip);
                         }
