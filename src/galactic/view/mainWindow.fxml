@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="600.0" maxWidth="900.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65" fx:controller="galactic.controller.MainWindowController">
+<GridPane maxHeight="600.0" maxWidth="900.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="galactic.controller.MainWindowController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.0" minWidth="140.0" prefWidth="280.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="10.0" prefWidth="20.0" />
@@ -93,6 +93,7 @@
       <GridPane GridPane.columnIndex="2">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="100.0" minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
@@ -103,7 +104,7 @@
          <children>
             <ImageView fitHeight="100.0" fitWidth="600.0" pickOnBounds="true" GridPane.columnSpan="2">
                <image>
-                  <Image url="@images/banner.jpg" />
+                  <Image url="@images/newBanner.png" />
                </image>
             </ImageView>
             <TextArea prefHeight="200.0" prefWidth="200.0" promptText="Type a message here" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="3">
